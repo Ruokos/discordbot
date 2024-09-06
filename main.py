@@ -7,7 +7,6 @@ from datetime import datetime, timezone, timedelta
 #Config for command prefix and also CHANNEL_ID it checks, for now only checks the Victoria 3 channel only
 COMMAND_PREFIX = "!"
 CHANNEL_ID = 1215322855584301117
-
 if not load_dotenv(): #Get private token for the bot from .env file 
     print("No .env file found, thus the program can't start")
 
@@ -42,7 +41,7 @@ async def on_message(message):
             current_time = datetime.now(timezone.utc)
             join_date = member.joined_at
             
-            #Sends a message to users that joined in the last 10 seconds referring to the pinned messages
+            #Sends a message to users that joined in the last 60 minutes referring to the pinned messages about the modlist and instructions
             if join_date is not None and (current_time - join_date) <= timedelta(minutes=60):
                 if any(trigger_word in message.content.lower() for trigger_word in TRIGGER_WORDS):
                     await message.channel.send(f"Hello {message.author.mention}, The modlist for Victoria 3 is pinned in this channel at the top right, including a short instruction for the installation")
