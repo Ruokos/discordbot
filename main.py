@@ -29,21 +29,25 @@ async def on_ready():
 #This should do the trick :p
 @bot.event
 async def on_message(message):
-    if message.author == bot.user:
-        return
+    try:
+        if message.author == bot.user:
+            return
     
-    #Checks if the message is send in the Victoria 3 channel
-    if message.channel.id == CHANNEL_ID:
-        #Get the member object
-        member = message.guild.get_member(message.author.id)
-        #Checks if the member has been loaded correctly
-        if member is not None:
-            current_time = datetime.now(timezone.utc)
-            join_date = member.joined_at
+        #Checks if the message is send in the Victoria 3 channel
+        if message.channel.id == CHANNEL_ID:
+            #Get the member object
+            member = message.guild.get_member(message.author.id)
+            #Checks if the member has been loaded correctly
+            if member is not None:
+                current_time = datetime.now(timezone.utc)
+                join_date = member.joined_at
             
-            #Sends a message to users that joined in the last 60 minutes referring to the pinned messages about the modlist and instructions
-            if join_date is not None and (current_time - join_date) <= timedelta(minutes=60):
-                if any(trigger_word in message.content.lower() for trigger_word in TRIGGER_WORDS):
-                    await message.channel.send(f"Hello {message.author.mention}, The modlist for Victoria 3 is pinned in this channel at the top right, including a short instruction for the installation")
+                #Sends a message to users that joined in the last 60 minutes referring to the pinned messages about the modlist and instructions
+                if join_date is not None and (current_time - join_date) <= timedelta(minutes=60):
+                    if any(trigger_word in message.content.lower() for trigger_word in TRIGGER_WORDS):
+                        await message.channel.send(f"Hello {message.author.mention}, The modlist for Victoria 3 is pinned in this channel at the top right, including a short instruction for the installation")
+    except Exception as e:
+        with open("error_log.txt", "a") as file:
+            file.write(f"{str(e)}\n")
 
 bot.run(TOKEN)
